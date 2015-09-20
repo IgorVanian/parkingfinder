@@ -7,8 +7,6 @@ var {
   Text,
   View,
 } = React;
-var UIExplorerBlock = require('./UIExplorerBlock');
-var UIExplorerPage = require('./UIExplorerPage');
 
 var SwitchAndroid = require('SwitchAndroid');
 var ToolbarAndroid = require('ToolbarAndroid');
@@ -30,8 +28,7 @@ var ErwanReact = React.createClass({
   },
   render: function() {
     return (
-      <UIExplorerPage title="<ToolbarAndroid>">
-        <UIExplorerBlock title="Toolbar with title/subtitle and actions">
+      <View>
           <ToolbarAndroid
             actions={toolbarActions}
             navIcon={require('image!ic_menu_black_24dp')}
@@ -41,45 +38,7 @@ var ErwanReact = React.createClass({
             subtitle={this.state.actionText}
             title="Toolbar" />
           <Text>{this.state.actionText}</Text>
-        </UIExplorerBlock>
-        <UIExplorerBlock title="Toolbar with logo & custom title view (a View with Switch+Text)">
-          <ToolbarAndroid
-            logo={require('image!ic_call_black_48dp')}
-            style={styles.toolbar}>
-            <View style={{height: 56, flexDirection: 'row', alignItems: 'center'}}>
-              <SwitchAndroid
-                value={this.state.toolbarSwitch}
-                onValueChange={(value) => this.setState({'toolbarSwitch': value})} />
-              <Text>{'\'Tis but a switch'}</Text>
-            </View>
-          </ToolbarAndroid>
-        </UIExplorerBlock>
-        <UIExplorerBlock title="Toolbar with no icon">
-          <ToolbarAndroid
-            actions={toolbarActions}
-            style={styles.toolbar}
-            subtitle="There be no icon here" />
-        </UIExplorerBlock>
-        <UIExplorerBlock title="Toolbar with navIcon & logo, no title">
-          <ToolbarAndroid
-            actions={toolbarActions}
-            logo={require('image!ic_call_black_48dp')}
-            navIcon={require('image!ic_menu_black_24dp')}
-            style={styles.toolbar} />
-        </UIExplorerBlock>
-        <UIExplorerBlock title="Toolbar with custom title colors">
-          <ToolbarAndroid
-            navIcon={require('image!ic_menu_black_24dp')}
-            onIconClicked={() => this.setState({colorProps: {}})}
-            title="Wow, such toolbar"
-            style={styles.toolbar}
-            subtitle="Much native"
-            {...this.state.colorProps} />
-          <Text>
-            Touch the icon to reset the custom colors to the default (theme-provided) ones.
-          </Text>
-        </UIExplorerBlock>
-      </UIExplorerPage>
+      </View>
     );
   },
   _onActionSelected: function(position) {

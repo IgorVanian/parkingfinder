@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react-native');
+
 var {
   AppRegistry,
   StyleSheet,
@@ -8,8 +9,9 @@ var {
   TouchableHighlight,
   Text,
   View,
-  ListView,
+  ListView
 } = React;
+
 
 var SwitchAndroid = require('SwitchAndroid');
 var ToolbarAndroid = require('ToolbarAndroid');
@@ -115,7 +117,7 @@ var styles = StyleSheet.create({
   toolbar: {
     backgroundColor: '#e9eaed',
     height: 56,
-  },
+  }
 });
 
-AppRegistry.registerComponent('ErwanReact', () => ErwanReact);
+AppRegistry.registerComponent('tatayoyo', () => ErwanReact);

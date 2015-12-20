@@ -12,7 +12,7 @@ var {
   View,
 } = React;
 
-var ErwanReact = React.createClass({
+var tatayoyo = React.createClass({
   render: function() {
     return (
       <View style={styles.container}>
@@ -50,4 +50,4 @@ var styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('ErwanReact', () => ErwanReact);
+AppRegistry.registerComponent('tatayoyo', () => tatayoyo);

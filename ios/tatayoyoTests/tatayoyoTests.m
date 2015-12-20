@@ -16,11 +16,11 @@
 #define TIMEOUT_SECONDS 240
 #define TEXT_TO_LOOK_FOR @"Welcome to React Native!"
 
-@interface ErwanReactTests : XCTestCase
+@interface tatayoyoTests : XCTestCase
 
 @end
 
-@implementation ErwanReactTests
+@implementation tatayoyoTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {
@@ -42,7 +42,7 @@
   BOOL foundElement = NO;
 
   __block NSString *redboxError = nil;
-  RCTSetLogFunction(^(RCTLogLevel level, NSString *fileName, NSNumber *lineNumber, NSString *message) {
+  RCTSetLogFunction(^(RCTLogLevel level, RCTLogSource source, NSString *fileName, NSNumber *lineNumber, NSString *message) {
     if (level >= RCTLogLevelError) {
       redboxError = message;
     }

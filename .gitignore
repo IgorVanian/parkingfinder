@@ -1,5 +1,7 @@
 # Most part of this file is created by https://www.gitignore.io
 
+.tern-port
+
 ### Node ###
 # Logs
 logs

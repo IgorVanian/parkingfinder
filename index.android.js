@@ -12,8 +12,7 @@ var {
   ListView
 } = React;
 
-
-var SwitchAndroid = require('SwitchAndroid');
+// var SwitchAndroid = require('SwitchAndroid');
 var ToolbarAndroid = require('ToolbarAndroid');
 
 // http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json
@@ -43,8 +42,8 @@ var ErwanReact = React.createClass({
       dataSource: ds.cloneWithRows(this._genRows({})),
       colorProps: {
         titleColor: '#3b5998',
-        subtitleColor: '#6a7180',
-      },
+        subtitleColor: '#6a7180'
+      }
     };
   },
   render: function() {
@@ -68,7 +67,7 @@ var ErwanReact = React.createClass({
   _renderRow: function(rowData: string, sectionID: number, rowID: number) {
     var rowHash = Math.abs(hashCode(rowData));
     var imgSource = {
-      uri: THUMB_URLS[rowHash % THUMB_URLS.length],
+      uri: THUMB_URLS[rowHash % THUMB_URLS.length]
     };
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
@@ -84,9 +83,9 @@ var ErwanReact = React.createClass({
       </TouchableHighlight>
     );
   },
-  _onActionSelected: function(position) {
+  _onActionSelected: function (position) {
     this.setState({
-      actionText: 'Selected ' + toolbarActions[position].title,
+      actionText: 'Selected ' + toolbarActions[position].title
     });
   },
   _genRows: function(pressData: {[key: number]: boolean}): Array<string> {

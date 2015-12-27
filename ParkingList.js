@@ -24,6 +24,7 @@ var hashCode = function(str) {
   return hash;
 };
 
+
 var ParkingList = React.createClass({
   propTypes: {
     sourceUrl: PropTypes.string.isRequired
@@ -38,12 +39,25 @@ var ParkingList = React.createClass({
     return {
       actionText: 'Example app with toolbar component',
       toolbarSwitch: false,
-      dataSource: ds.cloneWithRows(this._genRows({})),
+      dataSource: ds.cloneWithRows([]),
       colorProps: {
         titleColor: '#3b5998',
         subtitleColor: '#6a7180'
       }
     };
+  },
+  componentDidMount: function() {
+    fetch(this.props.sourceUrl)
+      .then((response) => response.json())
+      .then((json) => {
+        var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking;
+        console.log("update datasource");
+        this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
+      })
+      .catch((error) => {
+        console.warn(error);
+      })
+      .done();
   },
   render: function() {
     return (
@@ -53,18 +67,14 @@ var ParkingList = React.createClass({
       />
     );
   },
-  _renderRow: function(rowData: string, sectionID: number, rowID: number) {
+  _renderRow: function(rowData: object, sectionID: number, rowID: number) {
     var rowHash = Math.abs(hashCode(rowData));
-    var imgSource = {
-      uri: THUMB_URLS[rowHash % THUMB_URLS.length]
-    };
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View>
           <View style={styles.row}>
-            <Image style={styles.thumb} source={imgSource} />
             <Text style={styles.text}>
-              {rowData + ' - ' + LOREM_IPSUM.substr(0, rowHash % 301 + 10)}
+              {rowData.Grp_nom}
             </Text>
           </View>
           <View style={styles.separator} />
@@ -73,20 +83,11 @@ var ParkingList = React.createClass({
     );
   },
 
-  _genRows: function(pressData: {[key: number]: boolean}): Array<string> {
-    var dataBlob = [];
-    for (var ii = 0; ii < 100; ii++) {
-      var pressedText = pressData[ii] ? ' (pressed)' : '';
-      dataBlob.push('Row ' + ii + pressedText);
-    }
-    return dataBlob;
-  },
-
   _pressRow: function(rowID: number) {
-    this._pressData[rowID] = !this._pressData[rowID];
+/*    this._pressData[rowID] = !this._pressData[rowID];
     this.setState({dataSource: this.state.dataSource.cloneWithRows(
       this._genRows(this._pressData)
-    )});
+    )});*/
   }
 
 });

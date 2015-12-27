@@ -1,4 +1,4 @@
-package com.tatayoyo;
+package net.caffeinelab.parkingfinder;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();
 
-        mReactRootView.startReactApplication(mReactInstanceManager, "tatayoyo", null);
+        mReactRootView.startReactApplication(mReactInstanceManager, "parkingfinder", null);
 
         setContentView(mReactRootView);
     }

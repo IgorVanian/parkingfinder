@@ -58,4 +58,4 @@ var toolbarActions = [
   {title: 'Settings', icon: require('image!ic_settings_black_48dp'), show: 'always'},
 ];
 
-AppRegistry.registerComponent('tatayoyo', () => ErwanReact);
+AppRegistry.registerComponent('parkingfinder', () => ErwanReact);

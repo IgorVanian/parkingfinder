@@ -28,7 +28,7 @@ class ParkingList extends React.Component {
     };
   }
 
-  _refresh() {
+  _refresh(position) {
     fetch(url_nantes)
       .then((response) => response.json())
       .then((json) => {
@@ -38,7 +38,7 @@ class ParkingList extends React.Component {
               latitude: parkingLocations[item.IdObj]._l[0],
               longitude: parkingLocations[item.IdObj]._l[1]
             };
-            item.distance = haversine(this.props.position, item.location);
+            item.distance = haversine(position, item.location);
             item.address = parkingLocations[item.IdObj].ADRESSE;
           }
           return item;
@@ -51,8 +51,12 @@ class ParkingList extends React.Component {
       }).done();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this._refresh(nextProps.position);
+  }
+
   componentDidMount() {
-    this._refresh();
+    this._refresh(this.props.position);
   }
 
   render() {

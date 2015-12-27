@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var React = require('react-native');
+var palette = require('google-material-color');
 
 var {
   StyleSheet,
@@ -42,16 +43,16 @@ var styles = StyleSheet.create({
     backgroundColor: '#bbbbbb'
   },
   parkingFree: _.assign({
-    backgroundColor: '#0F0'
+    backgroundColor: palette.get('Green', 500)
   }, parkingMark),
   parkingMembers: _.assign({
-    backgroundColor: '#00F'
+    backgroundColor: palette.get('Blue', 500)
   }, parkingMark),
   parkingClosed: _.assign({
-    backgroundColor: '#0F0'
+    backgroundColor: palette.get('Red', 500)
   }, parkingMark),
   parkingFull: _.assign({
-    backgroundColor: '#F00'
+    backgroundColor: palette.get('Red', 500)
   }, parkingMark)
 });
 

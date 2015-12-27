@@ -2,12 +2,12 @@
 
 var _ = require('lodash');
 var React = require('react-native');
-var GiftedListView = require('react-native-gifted-listview');
 var styles = require('./styles');
 var equipements = require('./equipements');
 
 var {
   View,
+  ListView,
   TouchableHighlight,
   Text,
   PropTypes
@@ -28,9 +28,27 @@ class ParkingList extends React.Component {
 
   constructor(props) {
     super(props);
+    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: ds.cloneWithRows([]),
+      lastPosition: 'unknown'
+    };
   }
 
-  _onFetch(page = 1, callback, options) {
+  _refreshPosition(callback) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        var initialPosition = JSON.stringify(position);
+        this.setState({initialPosition});
+        if (callback) callback(initialPosition);
+      },
+      (error) => alert(error.message),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+  }
+
+  componentDidMount() {
+    this._refreshPosition();
     fetch(this.props.sourceUrl)
       .then((response) => response.json())
       .then((json) => {
@@ -38,7 +56,7 @@ class ParkingList extends React.Component {
           item.location = parkingLocations[item.IdObj] && parkingLocations[item.IdObj]._l;
           return item;
         });
-        callback(parking, {allLoaded: true});
+        this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
       })
       .catch((error) => {
         console.warn(error);
@@ -47,9 +65,9 @@ class ParkingList extends React.Component {
 
   render() {
     return (
-      <GiftedListView
-      onFetch={this._onFetch.bind(this)}
-      rowView={this._renderRow.bind(this)}
+      <ListView
+      dataSource={this.state.dataSource}
+      renderRow={this._renderRow.bind(this)}
       />
     );
   }

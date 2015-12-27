@@ -9,16 +9,9 @@ var {
   PixelRatio
 } = React;
 
-var parkingMark = {
-  fontSize: 22,
-  padding: 15,
-  textAlign: 'center',
-  color: '#FFF'
-};
-
 var styles = StyleSheet.create({
   toolbar: {
-    backgroundColor: '#e9eaed',
+    backgroundColor: palette.get('Amber', 500),
     height: 56
   },
   container: {
@@ -42,18 +35,25 @@ var styles = StyleSheet.create({
     height: 1 / PixelRatio.get(),
     backgroundColor: '#bbbbbb'
   },
-  parkingFree: _.assign({
+  parkingMark: {
+    fontSize: 22,
+    padding: 15,
+    borderRadius: 15,
+    textAlign: 'center',
+    color: '#FFF'
+  },
+  parkingFree: {
     backgroundColor: palette.get('Green', 500)
-  }, parkingMark),
-  parkingMembers: _.assign({
+  },
+  parkingMembers: {
     backgroundColor: palette.get('Blue', 500)
-  }, parkingMark),
-  parkingClosed: _.assign({
+  },
+  parkingClosed: {
     backgroundColor: palette.get('Red', 500)
-  }, parkingMark),
-  parkingFull: _.assign({
+  },
+  parkingFull: {
     backgroundColor: palette.get('Red', 500)
-  }, parkingMark)
+  }
 });
 
 module.exports = styles;

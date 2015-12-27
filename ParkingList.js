@@ -93,7 +93,7 @@ var ParkingList = React.createClass({
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View>
           <View style={styles.parkingItem}>
-            <Text style={pStyle}>P</Text>
+            <Text style={[styles.parkingMark, pStyle]}>P</Text>
             <Text style={styles.parkingName}>{name}</Text>
             <Text style={styles.parkingStatus}>{affichage}</Text>
           </View>

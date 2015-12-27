@@ -10,7 +10,7 @@ var {
 
 var styles = StyleSheet.create({
   toolbar: {
-    backgroundColor: palette.get('Amber', 500),
+    backgroundColor: palette.get('Teal', 500),
     height: 56
   },
   container: {

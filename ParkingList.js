@@ -15,15 +15,6 @@ var {
 
 var parkingLocations = _(equipements.data).filter((elt) => elt.CATEGORIE === 1001).indexBy('_IDOBJ').value();
 
-/* eslint no-bitwise: 0 */
-var hashCode = function(str) {
-  var hash = 15;
-  for (var ii = str.length - 1; ii >= 0; ii--) {
-    hash = ((hash << 5) - hash) + str.charCodeAt(ii);
-  }
-  return hash;
-};
-
 class ParkingList extends React.Component {
 
   constructor(props) {
@@ -73,7 +64,6 @@ class ParkingList extends React.Component {
   }
 
   _renderRow(rowData: object, sectionID: number, rowID: number) {
-    var rowHash = Math.abs(hashCode(rowData));
     var name = _.capitalize(rowData.Grp_nom.toLowerCase());
     var dispo = parseInt(rowData.Grp_disponible, 10);
     var complet = parseInt(rowData.Grp_complet, 10);

@@ -1,19 +1,18 @@
 'use strict';
 
+var _ = require('lodash');
 var React = require('react-native');
+var GiftedListView = require('react-native-gifted-listview');
+var styles = require('./styles');
 
 var {
   View,
-  StyleSheet,
   ListView,
   TouchableHighlight,
   Text,
   PropTypes
 } = React;
 
-var GiftedListView = require('react-native-gifted-listview');
-
-var styles = require('./styles');
 
 /* eslint no-bitwise: 0 */
 var hashCode = function(str) {
@@ -71,17 +70,22 @@ var ParkingList = React.createClass({
   },
   _renderRow: function(rowData: object, sectionID: number, rowID: number) {
     var rowHash = Math.abs(hashCode(rowData));
+    var name = _.capitalize(rowData.Grp_nom.toLowerCase());
     var dispo = parseInt(rowData.Grp_disponible, 10);
     var complet = parseInt(rowData.Grp_complet, 10);
     var affichage;
+    var pStyle = styles.parkingFree;
     if (rowData.Grp_statut === '0') {
       affichage = '';
     } else if (rowData.Grp_statut === '1') {
       affichage = 'FERME';
+      pStyle = styles.parkingClosed;
     } else if (rowData.Grp_statut === '2') {
       affichage = 'ABONNES';
+      pStyle = styles.parkingMembers;
     } else if (dispo < complet) {
       affichage = 'COMPLET';
+      pStyle = styles.parkingFull;
     } else {
       affichage = rowData.Grp_disponible;
     }
@@ -89,7 +93,8 @@ var ParkingList = React.createClass({
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View>
           <View style={styles.parkingItem}>
-            <Text style={styles.parkingName}>{rowData.Grp_nom}</Text>
+            <Text style={pStyle}>P</Text>
+            <Text style={styles.parkingName}>{name}</Text>
             <Text style={styles.parkingStatus}>{affichage}</Text>
           </View>
           <View style={styles.separator} />

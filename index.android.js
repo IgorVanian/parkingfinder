@@ -4,7 +4,6 @@ var React = require('react-native');
 
 var {
   AppRegistry,
-  StyleSheet,
   View
 } = React;
 
@@ -13,6 +12,7 @@ var ParkingList = require('./ParkingList');
 
 var url_nantes = "http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json";
 
+var styles = require('./styles');
 
 var ErwanReact = React.createClass({
   statics: {
@@ -57,15 +57,5 @@ var toolbarActions = [
   {title: 'Filter'},
   {title: 'Settings', icon: require('image!ic_settings_black_48dp'), show: 'always'},
 ];
-
-var styles = StyleSheet.create({
-  toolbar: {
-    backgroundColor: '#e9eaed',
-    height: 56
-  },
-  container: {
-    flex: 1
-  }
-});
 
 AppRegistry.registerComponent('tatayoyo', () => ErwanReact);

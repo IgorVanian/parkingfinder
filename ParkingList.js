@@ -13,6 +13,8 @@ var {
 
 var GiftedListView = require('react-native-gifted-listview');
 
+var styles = require('./styles');
+
 /* eslint no-bitwise: 0 */
 var hashCode = function(str) {
   var hash = 15;
@@ -86,9 +88,9 @@ var ParkingList = React.createClass({
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View>
-          <View style={styles.row}>
-            <Text style={styles.text}>{rowData.Grp_nom}</Text>
-            <Text style={styles.text}>{affichage}</Text>
+          <View style={styles.parkingItem}>
+            <Text style={styles.parkingName}>{rowData.Grp_nom}</Text>
+            <Text style={styles.parkingStatus}>{affichage}</Text>
           </View>
           <View style={styles.separator} />
         </View>
@@ -103,9 +105,6 @@ var ParkingList = React.createClass({
     )});*/
   }
 
-});
-
-var styles = StyleSheet.create({
 });
 
 module.exports = ParkingList;

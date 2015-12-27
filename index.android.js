@@ -4,19 +4,23 @@ var React = require('react-native');
 
 var {
   AppRegistry,
-  View
+  View,
+  Navigator
 } = React;
 
 var ToolbarAndroid = require('ToolbarAndroid');
 var StatusBarAndroid = require('react-native-android-statusbar');
+var Mapbox = require('react-native-mapbox-gl');
 var ParkingList = require('./ParkingList');
 var palette = require('google-material-color');
 
 var styles = require('./styles');
 
+var mapRef = 'map';
+
 StatusBarAndroid.setHexColor(palette.get('Teal', 700));
 
-class ErwanReact extends React.Component {
+class MainView extends React.Component {
 
   constructor(props) {
     super(props);
@@ -69,7 +73,9 @@ class ErwanReact extends React.Component {
   _onActionSelected(position) {
     if (toolbarActions[position].title === 'Refresh') {
       this._refreshPosition();
-    };
+    } else if (toolbarActions[position].title === 'Map') {
+      this.props.navigator.push({id: 'map'});
+    }
     this.setState({
       actionText: 'Selected ' + toolbarActions[position].title
     });
@@ -77,11 +83,57 @@ class ErwanReact extends React.Component {
 
 }
 
-ErwanReact.statics = {
-  title: 'Parking Finder',
-  description: 'Parking Finder in Nantes.'
-};
-
+var ErwanReact = React.createClass({
+  mixins: [Mapbox.Mixin],
+  statics: {
+    title: 'Parking Finder',
+    description: 'Parking Finder in Nantes.'
+  },
+  getInitialState: function() {
+    return {
+      position: { // Place du commerce
+        latitude: 47.2131707,
+        longitude: -1.5606393
+      }
+    };
+  },
+  render: function() {
+    return (
+        <Navigator
+            initialRoute={{id: 'list'}}
+            renderScene={this.renderScene}/>
+    );
+  },
+  renderScene: function(route, nav) {
+    switch (route.id) {
+    case "map":
+      return (
+          <Mapbox
+        navigator={nav}
+        accessToken={'pk.eyJ1IjoiZWxvaXNhbnQiLCJhIjoiY2lpcDQ3dHN5MDA2cHcwbTZrNWh2bmw2aCJ9.uvM77ecoNdm7y22OYWEFLQ'}
+        centerCoordinate={this.state.position}
+        debugActive={false}
+        direction={10}
+        ref={mapRef}
+        onRegionChange={this.onRegionChange}
+        rotationEnabled={true}
+        scrollEnabled={true}
+        style={styles.map}
+        showsUserLocation={true}
+        styleUrl={this.mapStyles.emerald}
+        userTrackingMode={this.userTrackingMode.none}
+        zoomEnabled={true}
+        zoomLevel={10}
+        compassIsHidden={true}
+        onUserLocationChange={this.onUserLocationChange}
+          />
+      );
+      break;
+    default:
+      return <MainView navigator={nav}/>;
+    }
+  }
+});
 
 var toolbarActions = [
   {title: 'Map', icon: require('image!ic_map_black_48dp'), show: 'always'},

@@ -16,6 +16,9 @@ var styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  map: {
+    flex: 1
+  },
   parkingItem: {
     flexDirection: 'row'
   },

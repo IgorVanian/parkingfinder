@@ -12,6 +12,8 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
 import me.neo.react.StatusBarPackage;
+import com.mapbox.reactnativemapboxgl.ReactNativeMapboxGLPackage;
+
 
 public class MainActivity extends Activity implements DefaultHardwareBackBtnHandler {
 
@@ -29,6 +31,7 @@ public class MainActivity extends Activity implements DefaultHardwareBackBtnHand
                 .setJSMainModuleName("index.android")
                 .addPackage(new MainReactPackage())
                 .addPackage(new StatusBarPackage(this))
+                .addPackage(new ReactNativeMapboxGLPackage())
                 .setUseDeveloperSupport(BuildConfig.DEBUG)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build();

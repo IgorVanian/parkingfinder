@@ -7,8 +7,10 @@
   },
   "dependencies": {
     "google-material-color": "^1.2.6",
+    "haversine": "^1.0.0",
     "lodash": "^3.10.1",
     "promise": "^7.1.1",
-    "react-native": "^0.17.0"
+    "react-native": "^0.17.0",
+    "react-native-android-statusbar": "^0.1.2"
   }
 }

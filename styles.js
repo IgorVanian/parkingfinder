@@ -10,7 +10,7 @@ var {
 
 var styles = StyleSheet.create({
   toolbar: {
-    backgroundColor: palette.get('Teal', 500),
+    backgroundColor: palette.get('Teal', 400),
     height: 56
   },
   container: {
@@ -20,10 +20,8 @@ var styles = StyleSheet.create({
     flexDirection: 'row'
   },
   parkingName: {
-    flex: 1,
     fontSize: 22,
-    paddingTop: 15,
-    paddingBottom: 15
+    paddingTop: 15
   },
   parkingStatus: {
     fontSize: 18,

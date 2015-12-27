@@ -13,6 +13,7 @@ var {
   PropTypes
 } = React;
 
+var url_nantes = "http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json";
 var parkingLocations = _(equipements.data).filter((elt) => elt.CATEGORIE === 1001).indexBy('_IDOBJ').value();
 
 class ParkingList extends React.Component {
@@ -26,25 +27,19 @@ class ParkingList extends React.Component {
     };
   }
 
-  _refreshPosition(callback) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        var initialPosition = JSON.stringify(position);
-        this.setState({initialPosition});
-        if (callback) callback(initialPosition);
-      },
-      (error) => alert(error.message),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-    );
-  }
-
   componentDidMount() {
-    this._refreshPosition();
-    fetch(this.props.sourceUrl)
+    fetch(url_nantes)
       .then((response) => response.json())
       .then((json) => {
         var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking.map((item) => {
-          item.location = parkingLocations[item.IdObj] && parkingLocations[item.IdObj]._l;
+          if (parkingLocations[item.IdObj]) {
+            console.log("loc iz ", parkingLocations[item.IdObj]);
+            item.location = {
+              latitude: parkingLocations[item.IdObj]._l[0],
+              longitude: parkingLocations[item.IdObj]._l[1]
+            };
+            item.address = parkingLocations[item.IdObj].ADRESSE;
+          }
           return item;
         });
         this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
@@ -65,6 +60,7 @@ class ParkingList extends React.Component {
 
   _renderRow(rowData: object, sectionID: number, rowID: number) {
     var name = _.capitalize(rowData.Grp_nom.toLowerCase());
+    var address = rowData.address;
     var dispo = parseInt(rowData.Grp_disponible, 10);
     var complet = parseInt(rowData.Grp_complet, 10);
     var affichage;
@@ -88,7 +84,10 @@ class ParkingList extends React.Component {
         <View>
           <View style={styles.parkingItem}>
             <Text style={[styles.parkingMark, pStyle]}>P</Text>
-            <Text style={styles.parkingName}>{name}</Text>
+              <View style={{flex: 1}}>
+              <Text style={styles.parkingName}>{name}</Text>
+              <Text style={styles.parkingAddress}>{address}</Text>
+            </View>
             <Text style={styles.parkingStatus}>{affichage}</Text>
           </View>
           <View style={styles.separator} />
@@ -107,7 +106,6 @@ class ParkingList extends React.Component {
 }
 
 ParkingList.propTypes = {
-  sourceUrl: PropTypes.string.isRequired
 };
 
 

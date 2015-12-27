@@ -8,11 +8,13 @@ var {
 } = React;
 
 var ToolbarAndroid = require('ToolbarAndroid');
+var StatusBarAndroid = require('react-native-android-statusbar');
 var ParkingList = require('./ParkingList');
-
-var url_nantes = "http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json";
+var palette = require('google-material-color');
 
 var styles = require('./styles');
+
+StatusBarAndroid.setHexColor(palette.get('Teal', 700));
 
 class ErwanReact extends React.Component {
 
@@ -24,8 +26,13 @@ class ErwanReact extends React.Component {
       colorProps: {
         titleColor: '#3b5998',
         subtitleColor: '#6a7180'
-      }
+      },
+      position: null
     };
+  }
+
+  componentDidMount() {
+    this._refreshPosition();
   }
 
   render() {
@@ -39,12 +46,27 @@ class ErwanReact extends React.Component {
             style={styles.toolbar}
             subtitle={this.state.actionText}
             title="Toolbar" />
-        <ParkingList sourceUrl={url_nantes} />
+        <ParkingList
+            position={this.state.position} />
       </View>
     );
   }
 
+  _refreshPosition() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({position: JSON.stringify(position)});
+        console.log('position: ', position);
+      },
+      (error) => alert(error.message),
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+  }
+
   _onActionSelected(position) {
+    if (toolbarActions[position].title === 'Refresh') {
+      this._refreshPosition();
+    };
     this.setState({
       actionText: 'Selected ' + toolbarActions[position].title
     });

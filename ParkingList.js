@@ -13,10 +13,7 @@ var {
   PropTypes
 } = React;
 
-const location_url = "http://data.nantes.fr/api/publication/24440040400129_NM_NM_00022/LOC_EQUIPUB_MOBILITE_NM_STBL/content/?format=json";
-
-var parkings = _(equipements.data).filter((elt) => elt.CATEGORY === 1001).indexBy('_IDOBJ').value();
-console.log("Parkings: ", parkings);
+var parkingLocations = _(equipements.data).filter((elt) => elt.CATEGORIE === 1001).indexBy('_IDOBJ').value();
 
 /* eslint no-bitwise: 0 */
 var hashCode = function(str) {
@@ -37,14 +34,15 @@ class ParkingList extends React.Component {
     fetch(this.props.sourceUrl)
       .then((response) => response.json())
       .then((json) => {
-        var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking;
-        console.log("got ", parking);
+        var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking.map((item) => {
+          item.location = parkingLocations[item.IdObj] && parkingLocations[item.IdObj]._l;
+          return item;
+        });
         callback(parking, {allLoaded: true});
       })
       .catch((error) => {
         console.warn(error);
       }).done();
-
   }
 
   render() {

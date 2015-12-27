@@ -16,8 +16,8 @@ var styles = require('./styles');
 
 var ErwanReact = React.createClass({
   statics: {
-    title: '<ToolbarAndroid>',
-    description: 'Examples of using the Android toolbar.'
+    title: 'Parking Finder',
+    description: 'Parking Finder in Nantes.'
   },
   getInitialState: function() {
     return {

@@ -6,14 +6,12 @@ var {
   View,
   StyleSheet,
   ListView,
-  Image,
   TouchableHighlight,
   Text,
   PropTypes
 } = React;
 
-var THUMB_URLS = ['https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851549_767334479959628_274486868_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851561_767334496626293_1958532586_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851579_767334503292959_179092627_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851589_767334513292958_1747022277_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851563_767334559959620_1193692107_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851593_767334566626286_1953955109_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851591_767334523292957_797560749_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851567_767334529959623_843148472_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851548_767334489959627_794462220_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851575_767334539959622_441598241_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-ash3/t39.1997/p128x128/851573_767334549959621_534583464_n.png', 'https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/t39.1997/p128x128/851583_767334573292952_1519550680_n.png'];
-var LOREM_IPSUM = 'Lorem ipsum dolor sit amet, ius ad pertinax oportere accommodare, an vix civibus corrumpit referrentur. Te nam case ludus inciderint, te mea facilisi adipiscing. Sea id integre luptatum. In tota sale consequuntur nec. Erat ocurreret mei ei. Eu paulo sapientem vulputate est, vel an accusam intellegam interesset. Nam eu stet pericula reprimique, ea vim illud modus, putant invidunt reprehendunt ne qui.';
+var GiftedListView = require('react-native-gifted-listview');
 
 /* eslint no-bitwise: 0 */
 var hashCode = function(str) {
@@ -46,13 +44,15 @@ var ParkingList = React.createClass({
       }
     };
   },
-  componentDidMount: function() {
+  _onFetch: function(page = 1, callback, options) {
+    console.log("Do fetch");
     fetch(this.props.sourceUrl)
       .then((response) => response.json())
       .then((json) => {
         var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking;
-        console.log("update datasource");
-        this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
+        console.log("got ", parking);
+        // this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
+        callback(parking, {allLoaded: true});
       })
       .catch((error) => {
         console.warn(error);
@@ -61,21 +61,34 @@ var ParkingList = React.createClass({
   },
   render: function() {
     return (
-      <ListView
-        dataSource={this.state.dataSource}
-        renderRow={this._renderRow}
+      <GiftedListView
+        onFetch={this._onFetch}
+        rowView={this._renderRow}
       />
     );
   },
   _renderRow: function(rowData: object, sectionID: number, rowID: number) {
     var rowHash = Math.abs(hashCode(rowData));
+    var dispo = parseInt(rowData.Grp_disponible, 10);
+    var complet = parseInt(rowData.Grp_complet, 10);
+    var affichage;
+    if (rowData.Grp_statut === '0') {
+      affichage = '';
+    } else if (rowData.Grp_statut === '1') {
+      affichage = 'FERME';
+    } else if (rowData.Grp_statut === '2') {
+      affichage = 'ABONNES';
+    } else if (dispo < complet) {
+      affichage = 'COMPLET';
+    } else {
+      affichage = rowData.Grp_disponible;
+    }
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View>
           <View style={styles.row}>
-            <Text style={styles.text}>
-              {rowData.Grp_nom}
-            </Text>
+            <Text style={styles.text}>{rowData.Grp_nom}</Text>
+            <Text style={styles.text}>{affichage}</Text>
           </View>
           <View style={styles.separator} />
         </View>

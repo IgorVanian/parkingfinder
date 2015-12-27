@@ -31,8 +31,8 @@ var ErwanReact = React.createClass({
   },
   render: function() {
     return (
-      <View>
-          <ToolbarAndroid
+      <View style={styles.container}>
+        <ToolbarAndroid
             actions={toolbarActions}
             navIcon={require('image!ic_menu_black_24dp')}
             onActionSelected={this._onActionSelected}
@@ -40,9 +40,7 @@ var ErwanReact = React.createClass({
             style={styles.toolbar}
             subtitle={this.state.actionText}
             title="Toolbar" />
-          <ParkingList
-            sourceUrl={url_nantes}
-          />
+        <ParkingList sourceUrl={url_nantes} />
       </View>
     );
   },
@@ -63,7 +61,10 @@ var toolbarActions = [
 var styles = StyleSheet.create({
   toolbar: {
     backgroundColor: '#e9eaed',
-    height: 56,
+    height: 56
+  },
+  container: {
+    flex: 1
   }
 });
 

@@ -1,6 +1,5 @@
 'use strict';
 
-var _ = require('lodash');
 var React = require('react-native');
 var palette = require('google-material-color');
 

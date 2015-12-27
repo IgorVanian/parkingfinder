@@ -8,6 +8,7 @@
   "dependencies": {
     "google-material-color": "^1.2.6",
     "lodash": "^3.10.1",
+    "promise": "^7.1.1",
     "react-native": "^0.17.0",
     "react-native-gifted-listview": "0.0.9"
   }

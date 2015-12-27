@@ -4,15 +4,19 @@ var _ = require('lodash');
 var React = require('react-native');
 var GiftedListView = require('react-native-gifted-listview');
 var styles = require('./styles');
+var equipements = require('./equipements');
 
 var {
   View,
-  ListView,
   TouchableHighlight,
   Text,
   PropTypes
 } = React;
 
+const location_url = "http://data.nantes.fr/api/publication/24440040400129_NM_NM_00022/LOC_EQUIPUB_MOBILITE_NM_STBL/content/?format=json";
+
+var parkings = _(equipements.data).filter((elt) => elt.CATEGORY === 1001).indexBy('_IDOBJ').value();
+console.log("Parkings: ", parkings);
 
 /* eslint no-bitwise: 0 */
 var hashCode = function(str) {
@@ -23,52 +27,36 @@ var hashCode = function(str) {
   return hash;
 };
 
+class ParkingList extends React.Component {
 
-var ParkingList = React.createClass({
-  propTypes: {
-    sourceUrl: PropTypes.string.isRequired
-  },
-  getDefaultProps() {
-    return {
-      sourceUrl: "http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json"
-    };
-  },
-  getInitialState: function() {
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    return {
-      actionText: 'Example app with toolbar component',
-      toolbarSwitch: false,
-      dataSource: ds.cloneWithRows([]),
-      colorProps: {
-        titleColor: '#3b5998',
-        subtitleColor: '#6a7180'
-      }
-    };
-  },
-  _onFetch: function(page = 1, callback, options) {
-    console.log("Do fetch");
+  constructor(props) {
+    super(props);
+  }
+
+  _onFetch(page = 1, callback, options) {
     fetch(this.props.sourceUrl)
       .then((response) => response.json())
       .then((json) => {
         var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking;
         console.log("got ", parking);
-        // this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
         callback(parking, {allLoaded: true});
       })
       .catch((error) => {
         console.warn(error);
-      })
-      .done();
-  },
-  render: function() {
+      }).done();
+
+  }
+
+  render() {
     return (
       <GiftedListView
-        onFetch={this._onFetch}
-        rowView={this._renderRow}
+      onFetch={this._onFetch.bind(this)}
+      rowView={this._renderRow.bind(this)}
       />
     );
-  },
-  _renderRow: function(rowData: object, sectionID: number, rowID: number) {
+  }
+
+  _renderRow(rowData: object, sectionID: number, rowID: number) {
     var rowHash = Math.abs(hashCode(rowData));
     var name = _.capitalize(rowData.Grp_nom.toLowerCase());
     var dispo = parseInt(rowData.Grp_disponible, 10);
@@ -101,16 +89,21 @@ var ParkingList = React.createClass({
         </View>
       </TouchableHighlight>
     );
-  },
+  }
 
-  _pressRow: function(rowID: number) {
+  _pressRow(rowID: number) {
 /*    this._pressData[rowID] = !this._pressData[rowID];
     this.setState({dataSource: this.state.dataSource.cloneWithRows(
       this._genRows(this._pressData)
     )});*/
   }
 
-});
+}
+
+ParkingList.propTypes = {
+  sourceUrl: PropTypes.string.isRequired
+};
+
 
 module.exports = ParkingList;
 

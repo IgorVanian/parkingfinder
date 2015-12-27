@@ -27,7 +27,10 @@ class ErwanReact extends React.Component {
         titleColor: '#3b5998',
         subtitleColor: '#6a7180'
       },
-      position: null
+      position: { // Place du commerce
+        latitude: 47.2131707,
+        longitude: -1.5606393
+      }
     };
   }
 
@@ -55,8 +58,8 @@ class ErwanReact extends React.Component {
   _refreshPosition() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        this.setState({position: JSON.stringify(position)});
-        console.log('position: ', position);
+        this.setState({position: position.coords});
+        console.log("Now: ", position.coords);
       },
       (error) => alert(error.message),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}

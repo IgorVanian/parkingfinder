@@ -4,6 +4,7 @@ var _ = require('lodash');
 var React = require('react-native');
 var styles = require('./styles');
 var equipements = require('./equipements');
+var haversine = require('haversine');
 
 var {
   View,
@@ -14,7 +15,7 @@ var {
 } = React;
 
 var url_nantes = "http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json";
-var parkingLocations = _(equipements.data).filter((elt) => elt.CATEGORIE === 1001).indexBy('_IDOBJ').value();
+var parkingLocations = _(equipements.data).filter((elt) => (elt.CATEGORIE === 1001 || elt.CATEGORIE === 1005)).indexBy('_IDOBJ').value();
 
 class ParkingList extends React.Component {
 
@@ -27,26 +28,31 @@ class ParkingList extends React.Component {
     };
   }
 
-  componentDidMount() {
+  _refresh() {
     fetch(url_nantes)
       .then((response) => response.json())
       .then((json) => {
         var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking.map((item) => {
           if (parkingLocations[item.IdObj]) {
-            console.log("loc iz ", parkingLocations[item.IdObj]);
             item.location = {
               latitude: parkingLocations[item.IdObj]._l[0],
               longitude: parkingLocations[item.IdObj]._l[1]
             };
+            item.distance = haversine(this.props.position, item.location);
             item.address = parkingLocations[item.IdObj].ADRESSE;
           }
           return item;
         });
+        parking.sort((p1, p2) => p1.distance - p2.distance);
         this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
       })
       .catch((error) => {
         console.warn(error);
       }).done();
+  }
+
+  componentDidMount() {
+    this._refresh();
   }
 
   render() {
@@ -106,6 +112,7 @@ class ParkingList extends React.Component {
 }
 
 ParkingList.propTypes = {
+  position: PropTypes.object
 };
 
 

@@ -3,8 +3,9 @@
 // TODO:
 // spinner on listview
 // round colored indicator
-// parkings on map
+// parkings on map are not clickable
 // back button from map goes back to list
+// Show info window after click on an item
 
 var React = require('react-native');
 
@@ -33,6 +34,7 @@ class ParkingFinder extends React.Component {
     super(props);
     this.state = {
       parkings: [],
+      loading: false,
       position: { // Place du commerce
         latitude: 47.2131707,
         longitude: -1.5606393
@@ -49,8 +51,10 @@ class ParkingFinder extends React.Component {
   }
 
   _refresh(position) {
-    nantes.getParkings(position).then((parkings) => {
-      this.setState({parkings: parkings});
+    this.setState({loading: true}, () => {
+      nantes.getParkings(position).then((parkings) => {
+        this.setState({parkings: parkings, loading: false});
+      });
     });
   }
 
@@ -97,6 +101,7 @@ class ParkingFinder extends React.Component {
       return (
           <ParkingList
         navigator={nav}
+        loading={this.state.loading}
         toolbaractions={toolbarActions}
         onactionselected={(position) => this.onActionSelected(position, nav)}
         position={this.state.position}

@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react-native');
+var ProgressBar = require('ProgressBarAndroid');
 var styles = require('./styles');
 
 var {
@@ -40,10 +41,13 @@ class MainView extends React.Component {
             style={styles.toolbar}
             subtitle={this.state.actionText}
             title="Toolbar" />
-        <ListView
+        { this.props.loading && <ProgressBar indeterminate={true}/> }
+        { !this.props.loading &&
+          <ListView
             dataSource={this.state.dataSource}
             renderRow={this._renderRow.bind(this)}
-        />
+            />
+        }
       </View>
     );
   }
@@ -63,21 +67,27 @@ class MainView extends React.Component {
     default:
       pStyle = styles.parkingFree;
     }
-    return (
-      <TouchableHighlight onPress={() => this._pressRow(rowID)}>
-        <View>
-          <View style={styles.parkingItem}>
-            <Text style={[styles.parkingMark, pStyle]}>P</Text>
-            <View style={{flex: 1}}>
-              <Text style={styles.parkingName}>{rowData.name}</Text>
-              <Text style={styles.parkingAddress}>{rowData.address}</Text>
+    if (this.props.loading) {
+      return (
+          <ProgressBar indeterminate={true}/>
+      );
+    } else {
+      return (
+        <TouchableHighlight onPress={() => this._pressRow(rowID)}>
+          <View>
+            <View style={styles.parkingItem}>
+              <Text style={[styles.parkingMark, pStyle]}>P</Text>
+              <View style={{flex: 1}}>
+                <Text style={styles.parkingName}>{rowData.name}</Text>
+                <Text style={styles.parkingAddress}>{rowData.address}</Text>
+              </View>
+              <Text style={styles.parkingStatus}>{rowData.status}</Text>
             </View>
-            <Text style={styles.parkingStatus}>{rowData.status}</Text>
+            <View style={styles.separator} />
           </View>
-          <View style={styles.separator} />
-        </View>
-      </TouchableHighlight>
-    );
+        </TouchableHighlight>
+      );
+    }
   }
 
   _pressRow(rowID: number) {
@@ -92,6 +102,7 @@ class MainView extends React.Component {
 MainView.propTypes = {
   toolbaractions: PropTypes.array,
   onactionselected: PropTypes.func,
+  loading: PropTypes.bool,
   parkings: PropTypes.array.isRequired,
   position: PropTypes.object.isRequired
 };

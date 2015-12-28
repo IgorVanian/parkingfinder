@@ -1,22 +1,24 @@
 'use strict';
 
+// TODO:
+// spinner on listview
+// round colored indicator
+// parkings on map
+// back button from map goes back to list
+
 var React = require('react-native');
 
 var {
   AppRegistry,
-  View,
-  Navigator,
-  PropTypes
+  Navigator
 } = React;
 
-var ToolbarAndroid = require('ToolbarAndroid');
 var StatusBarAndroid = require('react-native-android-statusbar');
 var ParkingList = require('./ParkingList');
 var ParkingMap = require('./ParkingMap');
 var palette = require('google-material-color');
 
 var nantes = require('./nantes');
-var styles = require('./styles');
 
 StatusBarAndroid.setHexColor(palette.get('Teal', 700));
 
@@ -25,47 +27,7 @@ var toolbarActions = [
   {title: 'Refresh', icon: require('image!ic_refresh_black_48dp'), show: 'always'}
 ];
 
-class MainView extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      actionText: 'Example app with toolbar component',
-      toolbarSwitch: false,
-      colorProps: {
-        titleColor: '#3b5998',
-        subtitleColor: '#6a7180'
-      }
-    };
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <ToolbarAndroid
-            actions={toolbarActions}
-            navIcon={require('image!ic_menu_black_24dp')}
-            onActionSelected={this.props.onactionselected}
-            onIconClicked={() => this.setState({actionText: 'Icon clicked'})}
-            style={styles.toolbar}
-            subtitle={this.state.actionText}
-            title="Toolbar" />
-        <ParkingList
-            parkings={this.props.parkings}
-            position={this.props.position} />
-      </View>
-    );
-  }
-
-}
-
-MainView.propTypes = {
-  onactionselected: PropTypes.func,
-  parkings: PropTypes.array.isRequired,
-  position: PropTypes.object.isRequired
-};
-
-class ErwanReact extends React.Component {
+class ParkingFinder extends React.Component {
 
   constructor(props) {
     super(props);
@@ -133,8 +95,9 @@ class ErwanReact extends React.Component {
       break;
     default:
       return (
-          <MainView
+          <ParkingList
         navigator={nav}
+        toolbaractions={toolbarActions}
         onactionselected={(position) => this.onActionSelected(position, nav)}
         position={this.state.position}
         parkings={this.state.parkings}
@@ -144,10 +107,10 @@ class ErwanReact extends React.Component {
   }
 }
 
-ErwanReact.statics = {
+ParkingFinder.statics = {
   title: 'Parking Finder',
   description: 'Parking Finder in Nantes.'
 };
 
 
-AppRegistry.registerComponent('parkingfinder', () => ErwanReact);
+AppRegistry.registerComponent('parkingfinder', () => ParkingFinder);

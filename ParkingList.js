@@ -1,9 +1,7 @@
 'use strict';
 
-var _ = require('lodash');
 var React = require('react-native');
 var styles = require('./styles');
-var nantes = require('./nantes');
 
 var {
   View,
@@ -13,19 +11,19 @@ var {
   PropTypes
 } = React;
 
-class ParkingList extends React.Component {
+var ToolbarAndroid = require('ToolbarAndroid');
+
+class MainView extends React.Component {
 
   constructor(props) {
     super(props);
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    console.log("Create with parkings ", props.parkings);
     this.state = {
       dataSource: ds.cloneWithRows(props.parkings)
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("Updated props: ", nextProps.parkings);
     this.setState({
       dataSource: this.state.dataSource.cloneWithRows(nextProps.parkings)
     });
@@ -33,10 +31,20 @@ class ParkingList extends React.Component {
 
   render() {
     return (
-      <ListView
-      dataSource={this.state.dataSource}
-      renderRow={this._renderRow.bind(this)}
-      />
+      <View style={styles.container}>
+        <ToolbarAndroid
+            actions={this.props.toolbaractions}
+            navIcon={require('image!ic_menu_black_24dp')}
+            onActionSelected={this.props.onactionselected}
+            onIconClicked={() => this.setState({actionText: 'Icon clicked'})}
+            style={styles.toolbar}
+            subtitle={this.state.actionText}
+            title="Toolbar" />
+        <ListView
+            dataSource={this.state.dataSource}
+            renderRow={this._renderRow.bind(this)}
+        />
+      </View>
     );
   }
 
@@ -81,11 +89,12 @@ class ParkingList extends React.Component {
 
 }
 
-ParkingList.propTypes = {
-  position: PropTypes.object,
-  parkings: PropTypes.array.isRequired
+MainView.propTypes = {
+  toolbaractions: PropTypes.array,
+  onactionselected: PropTypes.func,
+  parkings: PropTypes.array.isRequired,
+  position: PropTypes.object.isRequired
 };
 
-
-module.exports = ParkingList;
+module.exports = MainView;
 

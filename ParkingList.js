@@ -3,8 +3,7 @@
 var _ = require('lodash');
 var React = require('react-native');
 var styles = require('./styles');
-var equipements = require('./equipements');
-var haversine = require('haversine');
+var nantes = require('./nantes');
 
 var {
   View,
@@ -13,9 +12,6 @@ var {
   Text,
   PropTypes
 } = React;
-
-var url_nantes = "http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json";
-var parkingLocations = _(equipements.data).filter((elt) => (elt.CATEGORIE === 1001 || elt.CATEGORIE === 1005)).indexBy('_IDOBJ').value();
 
 class ParkingList extends React.Component {
 
@@ -29,26 +25,9 @@ class ParkingList extends React.Component {
   }
 
   _refresh(position) {
-    fetch(url_nantes)
-      .then((response) => response.json())
-      .then((json) => {
-        var parking = json.opendata.answer.data.Groupes_Parking.Groupe_Parking.map((item) => {
-          if (parkingLocations[item.IdObj]) {
-            item.location = {
-              latitude: parkingLocations[item.IdObj]._l[0],
-              longitude: parkingLocations[item.IdObj]._l[1]
-            };
-            item.distance = haversine(position, item.location);
-            item.address = parkingLocations[item.IdObj].ADRESSE;
-          }
-          return item;
-        });
-        parking.sort((p1, p2) => p1.distance - p2.distance);
-        this.setState({dataSource: this.state.dataSource.cloneWithRows(parking)});
-      })
-      .catch((error) => {
-        console.warn(error);
-      }).done();
+    nantes.getParkings(position).then((parkings) => {
+      this.setState({dataSource: this.state.dataSource.cloneWithRows(parkings)});
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,36 +48,30 @@ class ParkingList extends React.Component {
   }
 
   _renderRow(rowData: object, sectionID: number, rowID: number) {
-    var name = _.capitalize(rowData.Grp_nom.toLowerCase());
-    var address = rowData.address;
-    var dispo = parseInt(rowData.Grp_disponible, 10);
-    var complet = parseInt(rowData.Grp_complet, 10);
-    var affichage;
-    var pStyle = styles.parkingFree;
-    if (rowData.Grp_statut === '0') {
-      affichage = '';
-    } else if (rowData.Grp_statut === '1') {
-      affichage = 'FERME';
-      pStyle = styles.parkingClosed;
-    } else if (rowData.Grp_statut === '2') {
-      affichage = 'ABONNES';
-      pStyle = styles.parkingMembers;
-    } else if (dispo < complet) {
-      affichage = 'COMPLET';
+    let pStyle;
+    switch (rowData.status) {
+    case 'COMPLET':
       pStyle = styles.parkingFull;
-    } else {
-      affichage = rowData.Grp_disponible;
+      break;
+    case 'FERME':
+      pStyle = styles.parkingClosed;
+      break;
+    case 'ABONNES':
+      pStyle = styles.parkingMembers;
+      break;
+    default:
+      pStyle = styles.parkingFree;
     }
     return (
       <TouchableHighlight onPress={() => this._pressRow(rowID)}>
         <View>
           <View style={styles.parkingItem}>
             <Text style={[styles.parkingMark, pStyle]}>P</Text>
-              <View style={{flex: 1}}>
-              <Text style={styles.parkingName}>{name}</Text>
-              <Text style={styles.parkingAddress}>{address}</Text>
+            <View style={{flex: 1}}>
+              <Text style={styles.parkingName}>{rowData.name}</Text>
+              <Text style={styles.parkingAddress}>{rowData.address}</Text>
             </View>
-            <Text style={styles.parkingStatus}>{affichage}</Text>
+            <Text style={styles.parkingStatus}>{rowData.status}</Text>
           </View>
           <View style={styles.separator} />
         </View>

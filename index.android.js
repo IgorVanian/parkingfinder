@@ -5,20 +5,25 @@ var React = require('react-native');
 var {
   AppRegistry,
   View,
-  Navigator
+  Navigator,
+  PropTypes
 } = React;
 
 var ToolbarAndroid = require('ToolbarAndroid');
 var StatusBarAndroid = require('react-native-android-statusbar');
-var Mapbox = require('react-native-mapbox-gl');
 var ParkingList = require('./ParkingList');
+var ParkingMap = require('./ParkingMap');
 var palette = require('google-material-color');
 
+var nantes = require('./nantes');
 var styles = require('./styles');
 
-var mapRef = 'map';
-
 StatusBarAndroid.setHexColor(palette.get('Teal', 700));
+
+var toolbarActions = [
+  {title: 'Map', icon: require('image!ic_map_black_48dp'), show: 'always'},
+  {title: 'Refresh', icon: require('image!ic_refresh_black_48dp'), show: 'always'}
+];
 
 class MainView extends React.Component {
 
@@ -30,16 +35,8 @@ class MainView extends React.Component {
       colorProps: {
         titleColor: '#3b5998',
         subtitleColor: '#6a7180'
-      },
-      position: { // Place du commerce
-        latitude: 47.2131707,
-        longitude: -1.5606393
       }
     };
-  }
-
-  componentDidMount() {
-    this._refreshPosition();
   }
 
   render() {
@@ -48,96 +45,109 @@ class MainView extends React.Component {
         <ToolbarAndroid
             actions={toolbarActions}
             navIcon={require('image!ic_menu_black_24dp')}
-            onActionSelected={this._onActionSelected.bind(this)}
+            onActionSelected={this.props.onactionselected}
             onIconClicked={() => this.setState({actionText: 'Icon clicked'})}
             style={styles.toolbar}
             subtitle={this.state.actionText}
             title="Toolbar" />
         <ParkingList
-            position={this.state.position} />
+            parkings={this.props.parkings}
+            position={this.props.position} />
       </View>
     );
   }
 
-  _refreshPosition() {
+}
+
+MainView.propTypes = {
+  onactionselected: PropTypes.func,
+  parkings: PropTypes.array.isRequired,
+  position: PropTypes.object.isRequired
+};
+
+class ErwanReact extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      parkings: [],
+      position: { // Place du commerce
+        latitude: 47.2131707,
+        longitude: -1.5606393
+      }
+    };
+  }
+
+  render() {
+    return (
+        <Navigator
+            initialRoute={{id: 'list'}}
+            renderScene={this.renderScene.bind(this)}/>
+    );
+  }
+
+  _refresh(position) {
+    nantes.getParkings(position).then((parkings) => {
+      this.setState({parkings: parkings});
+    });
+  }
+
+  componentDidMount() {
+    this._refresh(this.state.position);
+    this._refreshPosition();
+  }
+
+  _refreshPosition(callback) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setState({position: position.coords});
-        console.log("Now: ", position.coords);
+        if (callback) callback(position);
       },
       (error) => alert(error.message),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
     );
   }
 
-  _onActionSelected(position) {
+  onActionSelected(position, nav) {
     if (toolbarActions[position].title === 'Refresh') {
       this._refreshPosition();
-    } else if (toolbarActions[position].title === 'Map') {
-      this.props.navigator.push({id: 'map'});
+    }
+    if (toolbarActions[position].title === 'Map') {
+      nav.push({id: 'map'});
     }
     this.setState({
       actionText: 'Selected ' + toolbarActions[position].title
     });
   }
 
-}
-
-var ErwanReact = React.createClass({
-  mixins: [Mapbox.Mixin],
-  statics: {
-    title: 'Parking Finder',
-    description: 'Parking Finder in Nantes.'
-  },
-  getInitialState: function() {
-    return {
-      position: { // Place du commerce
-        latitude: 47.2131707,
-        longitude: -1.5606393
-      }
-    };
-  },
-  render: function() {
-    return (
-        <Navigator
-            initialRoute={{id: 'list'}}
-            renderScene={this.renderScene}/>
-    );
-  },
-  renderScene: function(route, nav) {
+  renderScene(route, nav) {
     switch (route.id) {
     case "map":
       return (
-          <Mapbox
+          <ParkingMap
         navigator={nav}
-        accessToken={'pk.eyJ1IjoiZWxvaXNhbnQiLCJhIjoiY2lpcDQ3dHN5MDA2cHcwbTZrNWh2bmw2aCJ9.uvM77ecoNdm7y22OYWEFLQ'}
-        centerCoordinate={this.state.position}
-        debugActive={false}
-        direction={10}
-        ref={mapRef}
-        onRegionChange={this.onRegionChange}
-        rotationEnabled={true}
-        scrollEnabled={true}
-        style={styles.map}
-        showsUserLocation={true}
-        styleUrl={this.mapStyles.emerald}
-        userTrackingMode={this.userTrackingMode.none}
-        zoomEnabled={true}
-        zoomLevel={10}
-        compassIsHidden={true}
-        onUserLocationChange={this.onUserLocationChange}
+        position={this.state.position}
+        parkings={this.state.parkings}
           />
       );
       break;
     default:
-      return <MainView navigator={nav}/>;
+      return (
+          <MainView
+        navigator={nav}
+        onactionselected={(position) => this.onActionSelected(position, nav)}
+        position={this.state.position}
+        parkings={this.state.parkings}
+          />
+      );
     }
   }
-});
+}
 
-var toolbarActions = [
-  {title: 'Map', icon: require('image!ic_map_black_48dp'), show: 'always'},
-  {title: 'Refresh', icon: require('image!ic_refresh_black_48dp'), show: 'always'}
-];
+ErwanReact.statics = {
+  title: 'Parking Finder',
+  description: 'Parking Finder in Nantes.'
+};
+
 
 AppRegistry.registerComponent('parkingfinder', () => ErwanReact);

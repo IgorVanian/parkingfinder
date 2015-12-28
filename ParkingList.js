@@ -18,24 +18,17 @@ class ParkingList extends React.Component {
   constructor(props) {
     super(props);
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    console.log("Create with parkings ", props.parkings);
     this.state = {
-      dataSource: ds.cloneWithRows([]),
-      lastPosition: 'unknown'
+      dataSource: ds.cloneWithRows(props.parkings)
     };
   }
 
-  _refresh(position) {
-    nantes.getParkings(position).then((parkings) => {
-      this.setState({dataSource: this.state.dataSource.cloneWithRows(parkings)});
-    });
-  }
-
   componentWillReceiveProps(nextProps) {
-    this._refresh(nextProps.position);
-  }
-
-  componentDidMount() {
-    this._refresh(this.props.position);
+    console.log("Updated props: ", nextProps.parkings);
+    this.setState({
+      dataSource: this.state.dataSource.cloneWithRows(nextProps.parkings)
+    });
   }
 
   render() {
@@ -89,7 +82,8 @@ class ParkingList extends React.Component {
 }
 
 ParkingList.propTypes = {
-  position: PropTypes.object
+  position: PropTypes.object,
+  parkings: PropTypes.array.isRequired
 };
 
 

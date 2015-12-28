@@ -36,6 +36,7 @@ const getParkings = function(position) {
           status = item.Grp_disponible;
         }
         return {
+          id: item.IdObj,
           name: _.capitalize(item.Grp_nom.toLowerCase()),
           address: parkingLocations[item.IdObj].ADRESSE,
           location: location,

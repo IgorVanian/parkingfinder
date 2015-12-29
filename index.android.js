@@ -1,11 +1,11 @@
 'use strict';
 
 // TODO:
-// spinner on listview
+// center the spinner on listview
 // round colored indicator
 // parkings on map are not clickable
-// back button from map goes back to list
 // Show info window after click on an item
+// Proguard
 
 var React = require('react-native');
 

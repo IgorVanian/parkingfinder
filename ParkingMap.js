@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react-native');
+var BackAndroid = require('BackAndroid');
 
 var {
   PropTypes
@@ -17,6 +18,19 @@ var ParkingMap = React.createClass({
     position: PropTypes.object.isRequired,
     parkings: PropTypes.array,
     navigator: PropTypes.object
+  },
+
+  goBack: function() {
+    this.props.navigator.pop();
+    return true;
+  },
+
+  componentWillMount: function() {
+    BackAndroid.addEventListener('hardwareBackPress', this.goBack);
+  },
+
+  componentWillUnmount: function() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.goBack);
   },
 
   _annotations: function() {

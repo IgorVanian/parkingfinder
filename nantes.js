@@ -27,11 +27,11 @@ const getParkings = function(position) {
         if (item.Grp_statut === '0') {
           status = '';
         } else if (item.Grp_statut === '1') {
-          status = 'FERME';
+          status = 'F';
         } else if (item.Grp_statut === '2') {
-          status = 'ABONNES';
+          status = 'A';
         } else if (dispo < complet) {
-          status = 'COMPLET';
+          status = 'C';
         } else {
           status = item.Grp_disponible;
         }

@@ -10,7 +10,7 @@ var {
 
 var styles = StyleSheet.create({
   toolbar: {
-    backgroundColor: palette.get('Teal', 400),
+    backgroundColor: palette.get('Light Blue', 400),
     height: 56
   },
   container: {
@@ -20,6 +20,7 @@ var styles = StyleSheet.create({
     flex: 1
   },
   parkingItem: {
+    marginLeft: 10,
     flexDirection: 'row'
   },
   parkingName: {
@@ -27,20 +28,21 @@ var styles = StyleSheet.create({
     paddingTop: 15
   },
   parkingStatus: {
+    backgroundColor: palette.get('Green', 500),
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+    margin: 10,
+    paddingTop: 10
+  },
+  parkingStatusText: {
     fontSize: 18,
-    paddingTop: 15,
-    paddingBottom: 15
+    textAlign: 'center',
+    color: '#FFF'
   },
   separator: {
     height: 1 / PixelRatio.get(),
     backgroundColor: '#bbbbbb'
-  },
-  parkingMark: {
-    fontSize: 22,
-    padding: 15,
-    borderRadius: 15,
-    textAlign: 'center',
-    color: '#FFF'
   },
   parkingFree: {
     backgroundColor: palette.get('Green', 500)

@@ -5,6 +5,7 @@
 // round colored indicator
 // parkings on map are not clickable
 // Show info window after click on an item
+// Error management: URL doesn't respond
 // Proguard
 
 var React = require('react-native');
@@ -21,7 +22,7 @@ var palette = require('google-material-color');
 
 var nantes = require('./nantes');
 
-StatusBarAndroid.setHexColor(palette.get('Teal', 700));
+StatusBarAndroid.setHexColor(palette.get('Light Blue', 700));
 
 var toolbarActions = [
   {title: 'Map', icon: require('image!ic_map_black_48dp'), show: 'always'},
@@ -51,8 +52,10 @@ class ParkingFinder extends React.Component {
   }
 
   _refresh(position) {
+    console.log("refresh...");
     this.setState({loading: true}, () => {
       nantes.getParkings(position).then((parkings) => {
+        console.log("got parkings:", parkings);
         this.setState({parkings: parkings, loading: false});
       });
     });

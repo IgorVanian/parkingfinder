@@ -35,12 +35,11 @@ class MainView extends React.Component {
       <View style={styles.container}>
         <ToolbarAndroid
             actions={this.props.toolbaractions}
-            navIcon={require('image!ic_menu_black_24dp')}
             onActionSelected={this.props.onactionselected}
             onIconClicked={() => this.setState({actionText: 'Icon clicked'})}
             style={styles.toolbar}
-            subtitle={this.state.actionText}
-            title="Toolbar" />
+            subtitle="Nantes"
+            title="Parking Finder" />
         { this.props.loading && <ProgressBar indeterminate={true}/> }
         { !this.props.loading &&
           <ListView
@@ -55,13 +54,13 @@ class MainView extends React.Component {
   _renderRow(rowData: object, sectionID: number, rowID: number) {
     let pStyle;
     switch (rowData.status) {
-    case 'COMPLET':
+    case 'C':
       pStyle = styles.parkingFull;
       break;
-    case 'FERME':
+    case 'F':
       pStyle = styles.parkingClosed;
       break;
-    case 'ABONNES':
+    case 'A':
       pStyle = styles.parkingMembers;
       break;
     default:
@@ -76,12 +75,11 @@ class MainView extends React.Component {
         <TouchableHighlight onPress={() => this._pressRow(rowID)}>
           <View>
             <View style={styles.parkingItem}>
-              <Text style={[styles.parkingMark, pStyle]}>P</Text>
               <View style={{flex: 1}}>
                 <Text style={styles.parkingName}>{rowData.name}</Text>
                 <Text style={styles.parkingAddress}>{rowData.address}</Text>
               </View>
-              <Text style={styles.parkingStatus}>{rowData.status}</Text>
+              <View style={[styles.parkingStatus, pStyle]}><Text style={styles.parkingStatusText}>{rowData.status}</Text></View>
             </View>
             <View style={styles.separator} />
           </View>

@@ -18,6 +18,7 @@ var {
 var StatusBarAndroid = require('react-native-android-statusbar');
 var ParkingList = require('./ParkingList');
 var ParkingMap = require('./ParkingMap');
+var ParkingDetails = require('./ParkingDetails');
 var palette = require('google-material-color');
 
 var nantes = require('./nantes');
@@ -52,10 +53,8 @@ class ParkingFinder extends React.Component {
   }
 
   _refresh(position) {
-    console.log("refresh...");
     this.setState({loading: true}, () => {
       nantes.getParkings(position).then((parkings) => {
-        console.log("got parkings:", parkings);
         this.setState({parkings: parkings, loading: false});
       });
     });
@@ -100,6 +99,13 @@ class ParkingFinder extends React.Component {
           />
       );
       break;
+    case "details":
+      return (
+          <ParkingDetails
+        navigator={nav}
+        parking={route.parking}
+        />
+      )
     default:
       return (
           <ParkingList

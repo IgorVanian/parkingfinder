@@ -89,10 +89,10 @@ class MainView extends React.Component {
   }
 
   _pressRow(rowID: number) {
-/*    this._pressData[rowID] = !this._pressData[rowID];
-    this.setState({dataSource: this.state.dataSource.cloneWithRows(
-      this._genRows(this._pressData)
-    )});*/
+    this.props.navigator.push({
+      id: 'details',
+      parking: this.props.parkings[rowID]
+    });
   }
 
 }

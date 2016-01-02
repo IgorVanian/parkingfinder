@@ -1,8 +1,8 @@
 'use strict';
 
-const _ = require('lodash');
-const haversine = require('haversine');
-const equipements = require('./equipements');
+import _ from 'lodash';
+import haversine from 'haversine';
+import equipements from './equipements';
 
 const url_nantes = "http://data.nantes.fr/api/getDisponibiliteParkingsPublics/1.0/39W9VSNCSASEOGV/?output=json";
 const parkingLocations = _(equipements.data)
@@ -10,8 +10,7 @@ const parkingLocations = _(equipements.data)
         .indexBy('_IDOBJ')
         .value();
 
-
-const getParkings = function(position) {
+export const getParkings = function(position) {
   return fetch(url_nantes)
     .then((response) => response.json())
     .then((json) => {
@@ -52,6 +51,3 @@ const getParkings = function(position) {
     });
 };
 
-module.exports = {
-  getParkings: getParkings
-};

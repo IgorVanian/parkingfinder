@@ -10,7 +10,7 @@
 
 import React from 'react-native';
 
-var {
+const {
   AppRegistry,
   Navigator
 } = React;
@@ -22,11 +22,11 @@ import ParkingMap from './ParkingMap';
 import ParkingDetails from './ParkingDetails';
 import palette from 'google-material-color';
 
-import nantes from './nantes';
+import { getParkings } from './nantes';
 
 StatusBarAndroid.setHexColor(palette.get('Light Blue', 700));
 
-var _navigator;
+let _navigator;
 
 BackAndroid.addEventListener('hardwareBackPress', () => {
   if (_navigator && _navigator.getCurrentRoutes().length > 1) {
@@ -36,7 +36,7 @@ BackAndroid.addEventListener('hardwareBackPress', () => {
   return false;
 });
 
-var toolbarActions = [
+const toolbarActions = [
   {title: 'Map', icon: require('image!ic_map_black_48dp'), show: 'always'},
   {title: 'Refresh', icon: require('image!ic_refresh_black_48dp'), show: 'always'}
 ];
@@ -65,7 +65,7 @@ class ParkingFinder extends React.Component {
 
   _refresh(position) {
     this.setState({loading: true}, () => {
-      nantes.getParkings(position).then((parkings) => {
+      getParkings(position).then((parkings) => {
         this.setState({parkings: parkings, loading: false});
       });
     });

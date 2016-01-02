@@ -1,22 +1,21 @@
 'use strict';
 
-var React = require('react-native');
+import React from 'react-native';
 
-var {
+const {
   PropTypes
 } = React;
 
-var Mapbox = require('react-native-mapbox-gl');
-var styles = require('./styles');
+import Mapbox from 'react-native-mapbox-gl';
+import styles from './styles';
 
-var mapRef = 'map';
+const mapRef = 'map';
 
-var ParkingMap = React.createClass({
+const ParkingMap = React.createClass({
   mixins: [Mapbox.Mixin],
   propTypes: {
     position: PropTypes.object.isRequired,
-    parkings: PropTypes.array,
-    navigator: PropTypes.object
+    parkings: PropTypes.array
   },
 
   _annotations: function() {
@@ -58,5 +57,5 @@ var ParkingMap = React.createClass({
 
 });
 
-module.exports = ParkingMap;
+export default ParkingMap;
 

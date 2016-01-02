@@ -1,14 +1,13 @@
 'use strict';
 
 import React from 'react-native';
-
-var {
+const {
   PropTypes,
   View,
   Text
 } = React;
 
-var ParkingDetails = (props) => (
+const ParkingDetails = (props) => (
   <View>
     <Text>{props.parking.name}</Text>
   </View>
@@ -18,5 +17,5 @@ ParkingDetails.propTypes = {
   parking: PropTypes.object.isRequired
 };
 
-module.exports = ParkingDetails;
+export default ParkingDetails;
 

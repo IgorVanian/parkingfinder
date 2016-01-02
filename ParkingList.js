@@ -1,10 +1,10 @@
 'use strict';
 
-var React = require('react-native');
-var ProgressBar = require('ProgressBarAndroid');
-var styles = require('./styles');
+import React from 'react-native';
+import ProgressBar from 'ProgressBarAndroid';
+import styles from './styles';
 
-var {
+const {
   View,
   ListView,
   TouchableHighlight,
@@ -12,13 +12,13 @@ var {
   PropTypes
 } = React;
 
-var ToolbarAndroid = require('ToolbarAndroid');
+import ToolbarAndroid from 'ToolbarAndroid';
 
-class MainView extends React.Component {
+class ParkingList extends React.Component {
 
   constructor(props) {
     super(props);
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: ds.cloneWithRows(props.parkings)
     };
@@ -97,7 +97,7 @@ class MainView extends React.Component {
 
 }
 
-MainView.propTypes = {
+ParkingList.propTypes = {
   toolbaractions: PropTypes.array,
   onactionselected: PropTypes.func,
   loading: PropTypes.bool,
@@ -105,5 +105,5 @@ MainView.propTypes = {
   position: PropTypes.object.isRequired
 };
 
-module.exports = MainView;
+export default ParkingList;
 

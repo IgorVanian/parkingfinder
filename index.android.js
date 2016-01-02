@@ -55,14 +55,6 @@ class ParkingFinder extends React.Component {
     };
   }
 
-  render() {
-    return (
-        <Navigator
-            initialRoute={{id: 'list'}}
-            renderScene={this.renderScene.bind(this)}/>
-    );
-  }
-
   _refresh(position) {
     this.setState({loading: true}, () => {
       getParkings(position).then((parkings) => {
@@ -97,6 +89,14 @@ class ParkingFinder extends React.Component {
     this.setState({
       actionText: 'Selected ' + toolbarActions[position].title
     });
+  }
+
+  render() {
+    return (
+        <Navigator
+      initialRoute={{id: 'list'}}
+      renderScene={this.renderScene.bind(this)}/>
+    );
   }
 
   renderScene(route, nav) {

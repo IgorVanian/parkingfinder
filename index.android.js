@@ -8,22 +8,33 @@
 // Error management: URL doesn't respond
 // Proguard
 
-var React = require('react-native');
+import React from 'react-native';
 
 var {
   AppRegistry,
   Navigator
 } = React;
 
-var StatusBarAndroid = require('react-native-android-statusbar');
-var ParkingList = require('./ParkingList');
-var ParkingMap = require('./ParkingMap');
-var ParkingDetails = require('./ParkingDetails');
-var palette = require('google-material-color');
+import StatusBarAndroid from 'react-native-android-statusbar';
+import BackAndroid from 'BackAndroid';
+import ParkingList from './ParkingList';
+import ParkingMap from './ParkingMap';
+import ParkingDetails from './ParkingDetails';
+import palette from 'google-material-color';
 
-var nantes = require('./nantes');
+import nantes from './nantes';
 
 StatusBarAndroid.setHexColor(palette.get('Light Blue', 700));
+
+var _navigator;
+
+BackAndroid.addEventListener('hardwareBackPress', () => {
+  if (_navigator && _navigator.getCurrentRoutes().length > 1) {
+    _navigator.pop();
+    return true;
+  }
+  return false;
+});
 
 var toolbarActions = [
   {title: 'Map', icon: require('image!ic_map_black_48dp'), show: 'always'},
@@ -89,6 +100,7 @@ class ParkingFinder extends React.Component {
   }
 
   renderScene(route, nav) {
+    _navigator = nav;
     switch (route.id) {
     case "map":
       return (
@@ -101,11 +113,8 @@ class ParkingFinder extends React.Component {
       break;
     case "details":
       return (
-          <ParkingDetails
-        navigator={nav}
-        parking={route.parking}
-        />
-      )
+          <ParkingDetails parking={route.parking} />
+      );
     default:
       return (
           <ParkingList

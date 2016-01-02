@@ -1,7 +1,6 @@
 'use strict';
 
-var React = require('react-native');
-var BackAndroid = require('BackAndroid');
+import React from 'react-native';
 
 var {
   PropTypes,
@@ -9,34 +8,15 @@ var {
   Text
 } = React;
 
-var styles = require('./styles');
+var ParkingDetails = (props) => (
+  <View>
+    <Text>{props.parking.name}</Text>
+  </View>
+);
 
-var ParkingDetails = React.createClass({
-  propTypes: {
-    parking: PropTypes.object.isRequired
-  },
-
-  goBack: function() {
-    this.props.navigator.pop();
-    return true;
-  },
-
-  componentWillMount: function() {
-    BackAndroid.addEventListener('hardwareBackPress', this.goBack);
-  },
-
-  componentWillUnmount: function() {
-    BackAndroid.removeEventListener('hardwareBackPress', this.goBack);
-  },
-
-  render: function() {
-    return (
-        <View>
-        <Text>{this.props.parking.name}</Text>
-        </View>
-    );
-  }
-
-});
+ParkingDetails.propTypes = {
+  parking: PropTypes.object.isRequired
+};
 
 module.exports = ParkingDetails;
+

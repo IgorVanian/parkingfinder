@@ -51,41 +51,35 @@ class ParkingList extends React.Component {
     );
   }
 
-  _renderRow(rowData: object, sectionID: number, rowID: number) {
-    let pStyle;
-    switch (rowData.status) {
+  _styleFromStatus(status) {
+    switch (status) {
     case 'C':
-      pStyle = styles.parkingFull;
-      break;
+      return styles.parkingFull;
     case 'F':
-      pStyle = styles.parkingClosed;
-      break;
+      return styles.parkingClosed;
     case 'A':
-      pStyle = styles.parkingMembers;
-      break;
+      return styles.parkingMembers;
     default:
-      pStyle = styles.parkingFree;
+      return styles.parkingFree;
     }
-    if (this.props.loading) {
-      return (
-          <ProgressBar indeterminate={true}/>
-      );
-    } else {
-      return (
-        <TouchableHighlight onPress={() => this._pressRow(rowID)}>
-          <View>
-            <View style={styles.parkingItem}>
-              <View style={{flex: 1}}>
-                <Text style={styles.parkingName}>{rowData.name}</Text>
-                <Text style={styles.parkingAddress}>{rowData.address}</Text>
-              </View>
-              <View style={[styles.parkingStatus, pStyle]}><Text style={styles.parkingStatusText}>{rowData.status}</Text></View>
+  }
+
+  _renderRow(rowData: object, sectionID: number, rowID: number) {
+    const pStyle = this._styleFromStatus(rowData.status);
+    return (
+      <TouchableHighlight onPress={() => this._pressRow(rowID)}>
+        <View>
+          <View style={styles.parkingItem}>
+            <View style={{flex: 1}}>
+              <Text style={styles.parkingName}>{rowData.name}</Text>
+              <Text style={styles.parkingAddress}>{rowData.address}</Text>
             </View>
-            <View style={styles.separator} />
+            <View style={[styles.parkingStatus, pStyle]}><Text style={styles.parkingStatusText}>{rowData.status}</Text></View>
           </View>
-        </TouchableHighlight>
-      );
-    }
+          <View style={styles.separator} />
+        </View>
+      </TouchableHighlight>
+    );
   }
 
   _pressRow(rowID: number) {
